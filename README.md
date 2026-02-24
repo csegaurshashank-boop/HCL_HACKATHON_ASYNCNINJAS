@@ -3,7 +3,7 @@
 
 This is exactly how you should explain it in presentation.
 
-1️⃣ WHAT is the problem?
+1️⃣ What is the problem?
 🧾 What are we building?
 
 We are building:

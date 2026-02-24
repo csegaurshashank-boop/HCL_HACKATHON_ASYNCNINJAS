@@ -35,7 +35,7 @@ Admins can track the pulse of their IT department:
 
 | Layer | Technology |
 | :--- | :--- |
-| **Frontend** | React, Vite, Vanilla CSS (Rich UI) |
+| **Frontend** | React, Vite,|
 | **Backend** | FastAPI (Python), SQLAlchemy |
 | **Database** | SQLite (Primary), CSV (Historical NLP data) |
 | **AI/NLP** | Google Gemini 1.5 Flash, Scikit-learn (TF-IDF) |

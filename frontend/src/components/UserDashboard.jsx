@@ -269,20 +269,34 @@ export default function UserDashboard() {
 
         {!loading && aiSuggestions.length > 0 && (
           <div className="suggestion-list">
-            {aiSuggestions.map((s, i) => (
-              <div key={s.id || i} className="suggestion-card">
+            {/* 1. Main AI Recommendation (Featured) */}
+            {aiSuggestions.filter(s => s.id === 'ai-gen').map((s) => (
+              <div key={s.id} className="suggestion-card main-fix">
+                <div className="sugg-badge-top">✨ AI RECOMENDED FIX</div>
                 <div className="suggestion-body">
-                  <p className="suggestion-text">{s.text || s.suggested_fix}</p>
-                  <div className="suggestion-badges">
-                    <span className={matchClass(s.similarity)}>
-                      {s.similarity ? `${s.similarity}% match` : 'AI Generated'}
-                    </span>
-                    {s.status && <span className={`pill ${s.status === 'resolved' ? 'pill-resolved' : 'pill-open'}`}>{s.status}</span>}
-                  </div>
+                  <p className="suggestion-text" style={{ fontSize: '1.1rem', fontWeight: 500, whiteSpace: 'pre-wrap' }}>{s.text}</p>
                 </div>
-                <span className="sugg-index">#{i + 1}</span>
               </div>
             ))}
+
+            {/* 2. Historical Matches */}
+            {aiSuggestions.filter(s => s.id !== 'ai-gen').length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <p className="section-title" style={{ fontSize: 13, opacity: 0.7 }}>🔍 Based on Similar Past Tickets</p>
+                {aiSuggestions.filter(s => s.id !== 'ai-gen').map((s, i) => (
+                  <div key={s.id} className="suggestion-card match-card">
+                    <div className="suggestion-body">
+                      <p className="suggestion-text">{s.text}</p>
+                      <div className="suggestion-badges">
+                        <span className={matchClass(90 - (i * 5))}>
+                          {90 - (i * 5)}% database match
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

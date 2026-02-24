@@ -1854,3 +1854,34 @@ tbody td {
     display: none;
   }
 }
+
+/* ── AI Recommendation Refinements ── */
+.main-fix {
+  border: 2px solid #6366f1 !important;
+  background: rgba(99, 102, 241, 0.05) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.sugg-badge-top {
+  font-size: 11px;
+  font-weight: 700;
+  color: #818cf8;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+}
+
+.match-card {
+  opacity: 0.85;
+  border-left: 3px solid #334155 !important;
+  background: #1e293b;
+}
+
+.suggestion-card.main-fix:hover {
+  border-color: #818cf8 !important;
+  transform: scale(1.01);
+}

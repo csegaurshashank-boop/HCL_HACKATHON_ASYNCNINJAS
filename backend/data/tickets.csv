@@ -5,3 +5,4 @@ ticket_id,description,resolution
 4,Cannot access HR portal,Clear browser cookies and use the SSO link.
 5,Laptop screen goes black,"Update display drivers, and adjust power settings."
 99,My wireless mouse is lagging and randomly disconnecting,Replace the AA batteries in the mouse and plug the USB receiver into a different port.
+3,Cannot connect to vpn,Check network

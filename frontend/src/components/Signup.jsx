@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerUser } from '../api.js';
+import { registerUser, loginUser } from '../api.js';
 
 export default function Signup({ onSignupSuccess, onGoLogin }) {
     const [form, setForm] = useState({
@@ -38,11 +38,12 @@ export default function Signup({ onSignupSuccess, onGoLogin }) {
         setError('');
         try {
             const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
-            const data = await registerUser(
+            await registerUser(
                 fullName, form.email.trim(), form.password,
                 form.role, form.department.trim()
             );
-            onSignupSuccess(data.user);
+            // Redirect to login page as requested
+            onGoLogin();
         } catch (err) {
             setError(err.message || 'Registration failed. Please try again.');
         } finally {

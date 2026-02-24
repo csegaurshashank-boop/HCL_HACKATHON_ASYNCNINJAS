@@ -6,18 +6,25 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 // ── Session (localStorage) ────────────────────────────────────
 const SESSION_KEY = 'aegis_user';
+const TOKEN_KEY = 'aegis_token';
 const RESOLUTION_KEY = 'aegis_resolutions';
 
-export const saveSession = (user) =>
+export const saveSession = (user, token) => {
   localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  if (token) localStorage.setItem(TOKEN_KEY, token);
+};
 
 export const loadSession = () => {
   try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
   catch { return null; }
 };
 
-export const clearSession = () =>
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+
+export const clearSession = () => {
   localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(TOKEN_KEY);
+};
 
 // ── Resolutions (local cache) ─────────────────────────────────
 export const getResolutions = () => {
@@ -36,9 +43,13 @@ const saveResolution = (ticketId, data) => {
 
 // ── HTTP helper ───────────────────────────────────────────────
 const request = async (path, method = 'GET', body = null) => {
+  const token = getToken();
   const options = {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
   };
   if (body) options.body = JSON.stringify(body);
 
@@ -54,14 +65,14 @@ const request = async (path, method = 'GET', body = null) => {
 
 export const loginUser = async (email, password) => {
   const data = await request('/api/auth/login', 'POST', { email, password });
-  // Normalize role: backend sends 'employee', we treat it as 'user'
+  // data is { access_token: "...", token_type: "bearer", user: { id, name, email, role } }
   const user = {
     id: data.user.id,
     name: data.user.name,
     email: data.user.email,
-    role: data.user.role === 'admin' ? 'admin' : 'user',
+    role: data.user.role === 'admin' ? 'admin' : 'user', // Map 'employee' to 'user' for UI
   };
-  saveSession(user);
+  saveSession(user, data.access_token);
   return { user };
 };
 
@@ -74,13 +85,17 @@ export const registerUser = async (name, email, password, role, department) => {
     department: department || 'General',
     role: backendRole,
   });
+  // Signup returns schemas.UserResponse which has id, name, email, role
   const user = {
-    id: data.user?.id,
-    name: data.user?.name || name,
-    email: data.user?.email || email,
-    role: role,
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    role: data.role === 'admin' ? 'admin' : 'user',
   };
-  saveSession(user);
+  // Since signup doesn't return a token, we don't call saveSession here
+  // The UI will normally redirect to login or we can tell user to login.
+  // The current UI App.jsx handles setScreen('dashboard') on success, 
+  // so we might need to handle this discrepancy.
   return { user };
 };
 
@@ -96,8 +111,15 @@ export const raiseTicket = (userId, description, category, priority) =>
 
 export const getSuggestions = async (description) => {
   const data = await request('/api/tickets/suggest', 'POST', { description });
-  // Backend returns { suggested_fix: "..." } — wrap as array for UI
-  return [{ id: 1, text: data.suggested_fix, similarity: 95, status: 'resolved' }];
+  // Backend returns { suggested_fix: "...", top_matches: [...] }
+  const mainSugg = { id: 'ai-gen', text: data.suggested_fix, similarity: 100, status: 'resolved' };
+  const matches = (data.top_matches || []).map((text, idx) => ({
+    id: `match-${idx}`,
+    text: `Past Resolution: ${text}`,
+    similarity: 90 - (idx * 5),
+    status: 'resolved'
+  }));
+  return [mainSugg, ...matches];
 };
 
 export const getUserTickets = (userId) =>

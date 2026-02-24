@@ -46,7 +46,11 @@ def login(user_data: schemas.UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
     access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user": user
+    }
 
 # --- SPRINT 2 ENDPOINTS ---
 
@@ -89,6 +93,11 @@ def resolve_ticket(ticket_id: int, resolve_data: schemas.TicketResolve, db: Sess
     ticket = crud.resolve_ticket(db, ticket_id, resolve_data)
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    # If ticket is resolved and has text, add to CSV for AI training
+    if resolve_data.status == "Resolved" and resolve_data.resolution_text:
+        nlp.update_csv(ticket_id, ticket.description, resolve_data.resolution_text)
+        
     return {"message": f"Ticket marked as {resolve_data.status} successfully", "ticket": ticket}
 
 @app.get("/api/admin/analytics")
@@ -107,25 +116,18 @@ def add_to_knowledge_base(item: schemas.KnowledgeBaseItem, db: Session = Depends
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Not authorized")
         
-    csv_path = os.path.join(os.path.dirname(__file__), "data", "tickets.csv")
     try:
         # 1. SQL Database mein Resolution entry create karna
         res = models.Resolution(
             ticket_id=item.ticket_id,
-            admin_id=None, # System update
+            admin_id=current_user.id,
             resolution_text=item.resolution
         )
         db.add(res)
         db.commit()
 
-        # 2. CSV mein append karna (NLP training ke liye)
-        with open(csv_path, mode='a', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow([item.ticket_id, item.description, item.resolution])
-        
-        # Reloading NLP data
-        nlp.df = pd.read_csv(csv_path)
-        nlp.df.columns = nlp.df.columns.str.strip()
+        # 2. CSV mein append karna (Internal Helper used)
+        nlp.update_csv(item.ticket_id, item.description, item.resolution)
         
         return {"message": "Knowledge base updated in SQL & CSV. AI Engine Retrained Successfully!"}
     except Exception as e:

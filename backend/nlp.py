@@ -30,28 +30,43 @@ def get_ai_suggestion(new_text: str, top_n=3):
     cosine_similarities = cosine_similarity(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
     top_indices = cosine_similarities.argsort()[-top_n:][::-1]
     
-    resolutions = []
+    matches = []
     for idx in top_indices:
         if cosine_similarities[idx] > 0.1: 
-            resolutions.append(df.iloc[idx]['resolution'])
+            matches.append({
+                "issue": df.iloc[idx]['description'],
+                "resolution": df.iloc[idx]['resolution'],
+                "similarity": round(float(cosine_similarities[idx]) * 100, 1)
+            })
             
-    if not resolutions:
+    if not matches:
         return {"suggested_fix": "No exact past match found. IT support will look into this shortly.", "top_matches": []}
 
-    # 3. Gemini AI Summarization
-    combined_text = "\n- ".join(resolutions)
+    # 3. Gemini AI Analysis of Top 3 Matches
+    context_data = ""
+    for i, m in enumerate(matches):
+        context_data += f"\nMatch #{i+1} (Similarity: {m['similarity']}%):\n- Past Issue: {m['issue']}\n- Successful Resolution: {m['resolution']}\n"
+
     prompt = f"""
-    A user has raised an IT support ticket: "{new_text}"
-    Here are the resolutions from past similar tickets:
-    - {combined_text}
+    You are an expert IT Support Analyst. A user has a new issue: "{new_text}"
     
-    Based ONLY on these past resolutions, write a single, clear, and actionable 2-step troubleshooting guide for the user to try instantly. Do not add outside information.
+    I have analyzed our historical ticket database and found the following top {len(matches)} relevant past cases:
+    {context_data}
+    
+    TASK:
+    1. Analyze these past cases and identify the most likely root cause for the current issue.
+    2. Provide a single, consolidated "Expert Fix" that combines the best parts of these resolutions.
+    3. Keep it brief and actionable (max 3-4 lines).
+    
+    Format:
+    Root Cause Analysis: [Brief analysis]
+    Expert Fix: [Clear instructions]
     """
     
     ai_response = ""
     try:
         response = client.models.generate_content(
-            model='gemini-1.5-flash', 
+            model='gemini-flash-latest', 
             contents=prompt
         )
         ai_response = response.text
@@ -60,5 +75,24 @@ def get_ai_suggestion(new_text: str, top_n=3):
 
     return {
         "suggested_fix": ai_response,
-        "top_matches": resolutions[:3]
+        "top_matches": [m['resolution'] for m in matches]
     }
+
+def update_csv(ticket_id, description, resolution):
+    """Appends a new resolution to the tickets.csv and reloads the state."""
+    csv_path = os.path.join(os.path.dirname(__file__), "data", "tickets.csv")
+    global df
+    try:
+        import csv
+        # Append to CSV
+        with open(csv_path, mode='a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow([ticket_id, description, resolution])
+        
+        # Reload DataFrame
+        df = pd.read_csv(csv_path)
+        df.columns = df.columns.str.strip()
+        return True
+    except Exception as e:
+        print(f"Error updating CSV: {e}")
+        return False

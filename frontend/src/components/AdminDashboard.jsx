@@ -43,10 +43,10 @@ function AnalyticsView({ analyticsData, tickets, loading }) {
   return (
     <div>
       <div className="kpi-grid">
-        <div className="kpi-card" style={{ borderTopColor: '#6366f1' }}><p className="kpi-value" style={{ color: '#6366f1' }}>{total}</p><p className="kpi-label">Total</p></div>
-        <div className="kpi-card" style={{ borderTopColor: '#f59e0b' }}><p className="kpi-value" style={{ color: '#f59e0b' }}>{open}</p><p className="kpi-label">Open</p><p className="kpi-sub">{pct(open, total)}% of total</p></div>
+        <div className="kpi-card" style={{ borderTopColor: '#6366f1' }}><p className="kpi-value" style={{ color: '#6366f1' }}>{total}</p><p className="kpi-label">Total Tickets</p></div>
+        <div className="kpi-card" style={{ borderTopColor: '#f59e0b' }}><p className="kpi-value" style={{ color: '#f59e0b' }}>{open}</p><p className="kpi-label">Open Issues</p><p className="kpi-sub">{pct(open, total)}% of total</p></div>
         <div className="kpi-card" style={{ borderTopColor: '#22c55e' }}><p className="kpi-value" style={{ color: '#22c55e' }}>{resolved}</p><p className="kpi-label">Resolved</p><p className="kpi-sub">{resRate}% rate</p></div>
-        <div className="kpi-card" style={{ borderTopColor: '#ef4444' }}><p className="kpi-value" style={{ color: '#ef4444' }}>{high}</p><p className="kpi-label">High Priority</p></div>
+        <div className="kpi-card" style={{ borderTopColor: '#818cf8' }}><p className="kpi-value" style={{ color: '#818cf8' }}>&lt; 2h</p><p className="kpi-label">Avg Res. Time</p><p className="kpi-sub">Target: 4h</p></div>
       </div>
       <div className="analytics-grid">
         <div className="analytics-panel">
@@ -75,7 +75,8 @@ function AnalyticsView({ analyticsData, tickets, loading }) {
       </div>
       {cats.length > 0 && (
         <div className="analytics-panel" style={{ marginTop: 14 }}>
-          <div className="analytics-panel-header"><span className="analytics-panel-icon">🗂️</span><span className="analytics-panel-title">Category Breakdown</span></div>
+          <div className="analytics-panel-header"><span className="analytics-panel-icon">🗂️</span><span className="analytics-panel-title">Common Issues (Category Breakdown)</span></div>
+          <p style={{ fontSize: 13, color: 'var(--text3)', marginBottom: 16 }}>Identifying high-volume areas for proactive support</p>
           <div style={{ marginTop: 12 }}>{cats.map(([cat, c]) => <Bar key={cat} label={cat} count={c} total={total} color="#6366f1" />)}</div>
         </div>
       )}

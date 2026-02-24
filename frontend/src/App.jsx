@@ -66,15 +66,11 @@ function App() {
           <div className="navbar-links">
             {isAdmin ? (
               <>
-                <a className="nav-link nav-link-active" href="#">Dashboard</a>
-                <a className="nav-link" href="#">Reports</a>
-                <a className="nav-link" href="#">Settings</a>
+                <a className="nav-link nav-link-active" href="#">Admin Dashboard</a>
               </>
             ) : (
               <>
-                <a className="nav-link nav-link-active" href="#">My Tickets</a>
-                <a className="nav-link" href="#">History</a>
-                <a className="nav-link" href="#">Help</a>
+                <a className="nav-link nav-link-active" href="#">Employee Portal</a>
               </>
             )}
           </div>

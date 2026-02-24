@@ -91,5 +91,6 @@ HCL_HACKATHON_ASYNCNINJAS/
 Repetitive IT tickets account for up to **60-70%** of support volume. Aegis AI minimizes manual search time from minutes to **seconds**, saving hundreds of hours per month and allowing engineers to focus on high-impact projects.
 
 ---
+https://docs.google.com/document/d/1iY1JJE6JQh_yvuZeOPcEveJzBmPktQTykgZmqKl_AO0/edit?tab=t.0 
 
 **Developed with ❤️ by Team AsyncNinjas**

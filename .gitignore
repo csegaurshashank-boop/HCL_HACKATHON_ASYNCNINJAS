@@ -45,3 +45,14 @@ Desktop.ini
 .eslintcache
 coverage/
 *.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+ENV/
+
+# Database
+*.db
+*.sqlite3

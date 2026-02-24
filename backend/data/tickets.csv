@@ -1,0 +1,7 @@
+ticket_id,description,resolution
+1,My VPN is disconnecting,Clear Cisco cache and restart your router.
+2,Outlook is crashing,Run outlook in safe mode and disable add-ins.
+3,Printer is showing paper jam,"Open the back panel, clean the rollers, and reset the printer."
+4,Cannot access HR portal,Clear browser cookies and use the SSO link.
+5,Laptop screen goes black,"Update display drivers, and adjust power settings."
+99,My wireless mouse is lagging and randomly disconnecting,Replace the AA batteries in the mouse and plug the USB receiver into a different port.

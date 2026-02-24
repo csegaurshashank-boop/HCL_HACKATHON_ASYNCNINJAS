@@ -1,158 +1,95 @@
-# HCL_HACKATHON_ASYNCNINJAS
-🔥 WHAT – WHY – HOW Framework
-
-This is exactly how you should explain it in presentation.
-
-1️⃣ What is the problem?
-🧾 What are we building?
-
-We are building:
-
-An NLP-based IT Ticket Resolution Suggestion Engine
-
-In simple words:
-
-A smart system that:
-
-Reads a newly raised IT ticket
-
-Searches similar past tickets
-
-Suggests the most relevant resolutions instantly
-
-🧠 What is happening currently?
-
-In companies:
-
-Thousands of IT tickets are raised every month
-
-Many tickets are repetitive (login issues, VPN not working, app crash)
-
-Support engineers manually search old tickets to find similar problems
-
-This process is:
-
-Slow
-
-Manual
-
-Time-consuming
-
-Inefficient
-
-🎯 So WHAT exactly is our solution?
-
-Instead of humans searching manually:
-
-We build a system that:
-
-New Ticket → NLP Similarity Search → Top 3 Suggested Fixes
-2️⃣ WHY is this problem important?
-
-This is the most important part.
-
-🚨 Why does this matter?
-
-Because:
-
-✔ 60–70% of IT tickets are repetitive
-✔ Manual searching wastes engineer time
-✔ Resolution delays reduce employee productivity
-✔ Companies lose money due to downtime
-
-🏢 Business Impact
-
-If 1000 tickets/month
-and each ticket takes 10 minutes to search manually
-
-That’s:
-
-1000 × 10 min = 10,000 minutes
-= 166 hours wasted per month
-
-Your system reduces that search time to:
-
-👉 Few seconds.
-
-That is huge cost saving.
-
-🎯 Why NLP?
-
-Because tickets are written in natural language:
-
-Example:
-
-“VPN not connecting”
-
-“Cannot access office network remotely”
-
-“Remote login failing”
-
-They mean same thing but words are different.
-
-Keyword matching fails.
-
-NLP understands similarity in meaning.
-
-3️⃣ HOW will we solve it?
-
-Now the technical implementation.
-
-🏗 Step 1: Store Historical Data
-
-We create database tables:
-
-Tickets
-
-Resolutions
-
-Users
-
-Status
-
-We need historical tickets because:
-
-Similarity works only if we have past data.
-
-🧠 Step 2: NLP Processing
-
-When new ticket is raised:
-
-🔹 Text Preprocessing
-
-Lowercase
-
-Remove stopwords
-
-Tokenization
-
-🔹 Convert Text to Numbers
-
-Use:
-
-TF-IDF (baseline)
-OR
-
-Sentence Embeddings
-
-Because machine understands numbers, not text.
-
-🔹 Compute Similarity
-
-Use:
-
-Cosine Similarity
-
-Compare:
-
-New Ticket Vector
-vs
-All Historical Ticket Vectors
-
-Find top 3 closest matches.
-
-🔹 Return Resolutions
-
-Fetch resolutions of those top 3 similar tickets.
-
-Return them to user instantly.
+# Aegis AI: IT Ticket Resolution Suggestion Engine 🛡️🚀
+
+**HCL Hackathon | Team AsyncNinjas**
+
+Aegis AI is an intelligent, NLP-powered support assistant designed to drastically reduce IT helpdesk response times. By leveraging advanced text similarity algorithms and Generative AI, Aegis provides instant troubleshooting guides to employees and empowers admins with automated knowledge management.
+
+---
+
+## 🌟 Key Features
+
+### 1. 🤖 AI-Powered Instant Fixes
+The moment a user describes an issue, Aegis uses a hybrid system (**TF-IDF Similarity + Google Gemini AI**) to:
+- Find the **top 3 matching historical tickets** from the database.
+- Perform a **Root Cause Analysis** based on past data.
+- Generate a consolidated **Expert Fix** for immediate resolution.
+
+### 2. 🧠 Self-Improving Knowledge Loop
+Aegis doesn't just suggest; it learns.
+- Whenever an Admin resolves a ticket with a new solution, the system **automatically appends** it to the historical dataset (`tickets.csv`).
+- The NLP model reloads in real-time, making it smarter for the next similar query.
+
+### 3. 🛡️ Role-Based Access Control (RBAC)
+- **Employee Portal**: Dedicated space for raising tickets, viewing history, and receiving instant AI help.
+- **Admin Dashboard**: Comprehensive view for ticket management, resolving issues, and adding to the global knowledge base.
+
+### 4. 📊 Live Support Analytics
+Admins can track the pulse of their IT department:
+- **Avg Resolution Time**: Track speed and target efficiency.
+- **Common Issues**: Automated category breakdown to identify recurring bottlenecks.
+- **Resolution Rates**: Real-time KPI monitoring.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React, Vite, Vanilla CSS (Rich UI) |
+| **Backend** | FastAPI (Python), SQLAlchemy |
+| **Database** | SQLite (Primary), CSV (Historical NLP data) |
+| **AI/NLP** | Google Gemini 1.5 Flash, Scikit-learn (TF-IDF) |
+| **Security** | JWT (JSON Web Tokens), Bcrypt Hashing |
+
+---
+
+## 📂 Project Structure
+
+```text
+HCL_HACKATHON_ASYNCNINJAS/
+├── backend/
+│   ├── main.py           # API Endpoints & Routes
+│   ├── nlp.py            # AI Engine & Similarity Search
+│   ├── crud.py           # Database Operations
+│   ├── models.py         # SQL Alchemy Models
+│   ├── schemas.py        # Pydantic Schemas
+│   ├── auth.py           # JWT & Bcrypt Logic
+│   └── data/
+│       └── tickets.csv   # Historical Knowledge Base
+├── frontend/
+│   ├── src/
+│   │   ├── api.js        # API Integration Layer
+│   │   ├── components/   # Dashboards, Login, Signup
+│   │   └── App.jsx       # Main App Logic
+│   └── index.css         # Custom Premium Styling
+└── README.md             # Project Documentation
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Backend Setup
+1. Navigate to the backend directory: `cd backend`
+2. Configure `.env` with your `GEMINI_API_KEY` and `JWT_SECRET`.
+3. Start the server:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
+
+### 2. Frontend Setup
+1. Navigate to the frontend directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📈 Business Value
+Repetitive IT tickets account for up to **60-70%** of support volume. Aegis AI minimizes manual search time from minutes to **seconds**, saving hundreds of hours per month and allowing engineers to focus on high-impact projects.
+
+---
+
+**Developed with ❤️ by Team AsyncNinjas**

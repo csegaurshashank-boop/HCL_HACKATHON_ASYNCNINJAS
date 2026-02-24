@@ -156,3 +156,31 @@ Find top 3 closest matches.
 Fetch resolutions of those top 3 similar tickets.
 
 Return them to user instantly.
+💻 FRONTEND FOLDER STRUCTURE (React)
+frontend/
+│
+├── public/
+│
+├── src/
+│   ├── assets/
+│   │
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── TicketCard.jsx
+│   │
+│   ├── pages/
+│   │   ├── Login.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── RaiseTicket.jsx
+│   │   ├── Suggestions.jsx
+│   │   ├── AdminDashboard.jsx
+│   │
+│   ├── services/
+│   │   ├── api.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│
+├── package.json
+└── vite.config.js
